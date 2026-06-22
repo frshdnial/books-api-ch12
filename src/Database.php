@@ -15,19 +15,27 @@ final class Database
             return self::$pdo;
         }
 
+        // Use getenv() to fetch variables injected by Render, fallback to local settings if empty
+        $host    = getenv('DB_HOST') ?: '127.0.0.1';
+        $port    = getenv('DB_PORT') ?: '4000'; // TiDB defaults to port 4000
+        $dbname  = getenv('DB_NAME') ?: 'test';  // Default TiDB database is 'test'
+        $charset = getenv('DB_CHARSET') ?: 'utf8mb4';
+        $user    = getenv('DB_USER') ?: 'root';
+        $pass    = getenv('DB_PASS') ?: '';
+
         $dsn = sprintf(
             'mysql:host=%s;port=%s;dbname=%s;charset=%s',
-            $_ENV['DB_HOST'] ?? '127.0.0.1',
-            $_ENV['DB_PORT'] ?? '3306',
-            $_ENV['DB_NAME'] ?? 'books_api',
-            $_ENV['DB_CHARSET'] ?? 'utf8mb4'
+            $host,
+            $port,
+            $dbname,
+            $charset
         );
 
         try {
-            self::$pdo = new PDO($dsn, $_ENV['DB_USER'] ?? 'root', $_ENV['DB_PASS'] ?? '', [
+            self::$pdo = new PDO($dsn, $user, $pass, [
                 PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                PDO::ATTR_EMULATE_PREPARES   => false, // Keeps native prepared statements secure
+                PDO::ATTR_EMULATE_PREPARES   => false, 
             ]);
         } catch (PDOException $e) {
             error_log('[DB] ' . $e->getMessage());
