@@ -6,7 +6,10 @@ use App\Middleware\Cors;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-Dotenv::createImmutable(__DIR__ . '/..')->safeLoad();
+// Only attempt to load a local .env file if it actually exists (local machine)
+if (file_exists(__DIR__ . '/../.env')) {
+    Dotenv::createImmutable(__DIR__ . '/..')->load();
+}
 
 $app = AppFactory::create();
 $app->addBodyParsingMiddleware();
