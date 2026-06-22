@@ -15,13 +15,13 @@ final class Database
             return self::$pdo;
         }
 
-        // Use getenv() to fetch variables injected by Render, fallback to local settings if empty
-        $host    = getenv('DB_HOST') ?: '127.0.0.1';
-        $port    = getenv('DB_PORT') ?: '4000'; // TiDB defaults to port 4000
-        $dbname  = getenv('DB_NAME') ?: 'test';  // Default TiDB database is 'test'
-        $charset = getenv('DB_CHARSET') ?: 'utf8mb4';
-        $user    = getenv('DB_USER') ?: 'root';
-        $pass    = getenv('DB_PASS') ?: '';
+        // HARDCODED PUBLIC BYPASS (Replaces dynamic environment variables)
+        $host    = 'mysql.railway.internal';     // e.g., 'containers-us-west-123.railway.app' or 'mysql.railway.app'
+        $port    = '3306';     // e.g., '5432' or '6123' (DO NOT USE 3306)
+        $dbname  = 'railway';                       // Keep as 'railway' unless you renamed it
+        $charset = 'utf8mb4';
+        $user    = 'root';
+        $pass    = 'yTkoOVbHVeOfBuBKwgwrtofQbVFVUYAx';        // Your strong generated database password string
 
         $dsn = sprintf(
             'mysql:host=%s;port=%s;dbname=%s;charset=%s',
